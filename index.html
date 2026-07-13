@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,7 +76,25 @@
     border:1px solid rgba(255,255,255,0.15);
     box-shadow:0 6px 20px -6px rgba(37,99,235,0.6);
     cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center;
   }
+  .nav-actions{display:flex; align-items:center; gap:12px;}
+  .btn-donate{
+    display:inline-flex; align-items:center; gap:7px;
+    background:rgba(255,255,255,0.04); color:var(--text-0);
+    font-weight:600; font-size:13.5px;
+    padding:9px 16px; border-radius:8px; text-decoration:none;
+    border:1px solid var(--line-strong);
+    transition:background .15s, border-color .15s;
+  }
+  .btn-donate:hover{background:rgba(0,112,186,0.10); border-color:rgba(0,112,186,0.45);}
+  .btn-donate .cup{font-size:15px; line-height:1; color:#0070ba;}
+  .donate-line{
+    margin-top:18px; font-size:13.5px; color:var(--text-1);
+    display:flex; align-items:center; justify-content:center; gap:8px; position:relative;
+  }
+  .donate-line a{color:var(--blue-glow); text-decoration:none; font-weight:600;}
+  .donate-line a:hover{text-decoration:underline;}
 
   /* HERO */
   .hero{
@@ -146,15 +164,32 @@
   .titlebar .tb-left{display:flex; align-items:center; gap:8px; font-weight:600; color:var(--text-0);}
   .tb-dots{display:flex; gap:7px;}
   .tb-dots span{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.12);}
-  .app-body{display:grid; grid-template-columns:130px 1fr; min-height:330px; position:relative; z-index:1;}
-  .sidebar{border-right:1px solid var(--line); padding:14px 10px; font-size:12.5px;}
+  .app-body{display:grid; grid-template-columns:150px 1fr; min-height:360px; position:relative; z-index:1;}
+  .sidebar{border-right:1px solid var(--line); padding:14px 10px; font-size:12.5px; display:flex; flex-direction:column;}
+  .sb-brand{text-align:center; padding-bottom:12px; margin-bottom:10px; border-bottom:1px solid var(--line);}
+  .sb-logo{
+    width:32px; height:32px; margin:0 auto 8px; border-radius:9px;
+    background:linear-gradient(180deg,var(--blue-1),var(--blue-2));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 16px -4px rgba(37,99,235,0.55);
+  }
+  .sb-title{font-size:12px; font-weight:700; color:var(--text-0);}
+  .sb-sub{font-size:9px; color:var(--blue-glow); margin-top:2px;}
+  .sb-version{font-size:8.5px; color:var(--text-2); margin-top:4px;}
+  .sb-ext{font-size:9px; color:var(--green); margin-top:6px; display:flex; align-items:center; justify-content:center; gap:4px;}
+  .sb-ext .dot-live{width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 6px var(--green);}
+  .sb-nav{flex:1;}
   .sidebar .all{
     background:rgba(79,140,255,0.18); color:var(--blue-glow); font-weight:600;
     border-radius:6px; padding:7px 10px; margin-bottom:8px;
   }
-  .sidebar .group-label{color:var(--text-2); font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; margin:14px 0 6px 10px;}
+  .sidebar .group-label{color:var(--text-2); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; margin:14px 0 6px 10px;}
   .sidebar .cat{color:var(--text-1); padding:6px 10px; border-radius:6px;}
-  .main-pane{padding:14px 16px;}
+  .sb-bottom{border-top:1px solid var(--line); padding-top:10px; margin-top:8px; font-size:11px;}
+  .sb-link{color:var(--text-1); padding:5px 10px;}
+  .sb-link.muted{color:var(--text-2);}
+  .sb-exit{color:#f87171; padding:5px 10px; font-weight:600;}
+  .main-pane{padding:14px 16px; overflow:hidden;}
   .search-row{display:flex; gap:8px; margin-bottom:14px;}
   .search-box{
     flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--line);
@@ -165,18 +200,26 @@
     background:linear-gradient(180deg,var(--blue-1),var(--blue-2)); color:white;
     font-size:12px; font-weight:600; padding:8px 14px; border-radius:7px; white-space:nowrap;
   }
-  table{width:100%; border-collapse:collapse; font-size:12px;}
+  table{width:100%; border-collapse:collapse; font-size:11px;}
   thead th{
-    text-align:left; color:var(--text-2); font-weight:600; font-size:10.5px;
-    text-transform:uppercase; letter-spacing:0.04em; padding-bottom:8px; border-bottom:1px solid var(--line);
+    text-align:left; color:var(--text-2); font-weight:600; font-size:9.5px;
+    text-transform:uppercase; letter-spacing:0.03em; padding-bottom:8px; border-bottom:1px solid var(--line);
+    white-space:nowrap;
   }
-  tbody td{padding:9px 6px; border-bottom:1px solid var(--line); color:var(--text-1);}
+  tbody td{padding:9px 6px; border-bottom:1px solid var(--line); color:var(--text-1); white-space:nowrap;}
   .svc{display:flex; align-items:center; gap:8px; color:var(--text-0); font-weight:600;}
   .ico{width:18px; height:18px; border-radius:5px; flex-shrink:0;}
   .strength{display:flex; gap:3px;}
   .strength span{width:5px; height:11px; border-radius:2px; background:rgba(255,255,255,0.1);}
   .strength span.on{background:var(--green);}
   .strength span.mid{background:var(--amber);}
+  .action-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px; border-top:1px solid var(--line); position:relative; z-index:1;
+  }
+  .ab-btns{display:flex; gap:13px; font-size:10px; color:var(--text-1); white-space:nowrap;}
+  .ab-btns .ab-delete{color:#f87171;}
+  .ab-count{font-size:10px; color:var(--text-2); white-space:nowrap;}
 
   /* SECTION: features */
   section{padding:96px 0; position:relative; z-index:1;}
@@ -263,6 +306,9 @@
     .nav-links{display:none;}
     .device-stack{height:240px;}
   }
+  @media (max-width:480px){
+    .btn-donate{display:none;}  /* still reachable via footer + download section */
+  }
 </style>
 </head>
 <body>
@@ -276,29 +322,34 @@
       The LockShed
     </div>
     <div class="nav-links">
-      <a href="#features">Funktioner</a>
-      <a href="#reach">Plattformar</a>
-      <a href="#download">Ladda ner</a>
+      <a href="#features">Features</a>
+      <a href="#reach">Platforms</a>
+      <a href="#download">Download</a>
       <a href="#support">Support</a>
     </div>
-    <button class="nav-cta">Ladda ner</button>
+    <div class="nav-actions">
+      <a href="https://paypal.me/paddesan" target="_blank" rel="noopener" class="btn-donate">
+        <span class="cup">💙</span> Donate via PayPal
+      </a>
+      <a href="https://github.com/yalkatrazz/lockshed/releases/latest/download/LockShed-Setup.exe" class="nav-cta">Download</a>
+    </div>
   </nav>
 
   <section class="hero">
     <div>
-      <div class="eyebrow"><span class="dot"></span> v30 · 100% lokal lagring</div>
-      <h1>Dina lösenord.<br><span class="accent">Säkert</span> inlåsta.</h1>
-      <p class="lead">The LockShed krypterar dina lösenord, anteckningar och känsliga uppgifter lokalt på din dator — med AES-256-CBC och HMAC-SHA256. Inget lämnar din maskin om du inte vill.</p>
+      <div class="eyebrow"><span class="dot"></span> v1.0.0 · 100% local storage</div>
+      <h1>Your passwords.<br><span class="accent">Securely</span> locked away.</h1>
+      <p class="lead">The LockShed encrypts your passwords, notes, and sensitive information locally on your computer — with AES-256-CBC and HMAC-SHA256. Nothing leaves your machine unless you want it to.</p>
       <div class="cta-row">
         <a href="#download" class="btn-primary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h5.5v5.5H2V2zm6.5 0H14v5.5H8.5V2zM2 8.5h5.5V14H2V8.5zm6.5 0H14V14H8.5V8.5z" fill="white"/></svg>
-          Ladda ner för Windows
+          Download for Windows
         </a>
-        <a href="#features" class="btn-secondary">Se funktioner</a>
+        <a href="#features" class="btn-secondary">See features</a>
       </div>
       <div class="trust-line">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" stroke="#7989ab" stroke-width="1.6"/></svg>
-        100% lokal kryptering · Du äger din data
+        100% local encryption · You own your data
       </div>
     </div>
 
@@ -312,68 +363,90 @@
       </div>
       <div class="app-body">
         <div class="sidebar">
-          <div class="all">Alla</div>
-          <div class="group-label">Kategorier</div>
-          <div class="cat">E-post</div>
-          <div class="cat">Socialt</div>
-          <div class="cat">Jobb</div>
-          <div class="cat">Webbshop</div>
-          <div class="cat">Gaming</div>
+          <div class="sb-brand">
+            <div class="sb-logo">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6 10V7a6 6 0 0112 0v3" stroke="white" stroke-width="2" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="2.5" fill="white"/></svg>
+            </div>
+            <div class="sb-title">The LockShed</div>
+            <div class="sb-sub">Your private vault</div>
+            <div class="sb-version">v1.0.0</div>
+            <div class="sb-ext"><span class="dot-live"></span>Extension ready</div>
+          </div>
+          <div class="sb-nav">
+            <div class="all">All</div>
+            <div class="group-label">Categories</div>
+            <div class="cat">Email</div>
+            <div class="cat">Social</div>
+            <div class="cat">Work</div>
+            <div class="cat">Finance</div>
+            <div class="cat">Gaming</div>
+          </div>
+          <div class="sb-bottom">
+            <div class="sb-link muted">Change password</div>
+            <div class="sb-link">Settings</div>
+            <div class="sb-exit">⏻ Exit</div>
+          </div>
         </div>
         <div class="main-pane">
           <div class="search-row">
-            <div class="search-box">🔍 Sök i valvet…</div>
-            <div class="new-btn">+ Ny</div>
+            <div class="search-box"></div>
+            <div class="new-btn">+ New</div>
           </div>
           <table>
-            <thead><tr><th>Tjänst</th><th>Användare</th><th>Kategori</th><th>Styrka</th></tr></thead>
+            <thead><tr><th>Service</th><th>Username / Email</th><th>Category</th><th>Strength</th><th>Last changed</th><th>URL</th></tr></thead>
             <tbody>
-              <tr><td><div class="svc"><div class="ico" style="background:#ea4335"></div>Google</div></td><td>john.doe@gmail.com</td><td>E-post</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td></tr>
-              <tr><td><div class="svc"><div class="ico" style="background:#5865f2"></div>Discord</div></td><td>johndoe#1234</td><td>Socialt</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="mid"></span><span></span><span></span></div></td></tr>
-              <tr><td><div class="svc"><div class="ico" style="background:#1b2838"></div>Steam</div></td><td>johndoe</td><td>Gaming</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td></tr>
-              <tr><td><div class="svc"><div class="ico" style="background:#e50914"></div>Netflix</div></td><td>john.doe@gmail.com</td><td>Streaming</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div></td></tr>
+              <tr><td><div class="svc"><div class="ico" style="background:#ea4335"></div>Google</div></td><td>john.doe@gmail.com</td><td>Email</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td><td>2mo ago</td><td>google.com</td></tr>
+              <tr><td><div class="svc"><div class="ico" style="background:#5865f2"></div>Discord</div></td><td>johndoe#1234</td><td>Social</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="mid"></span><span></span><span></span></div></td><td>5mo ago</td><td>discord.com</td></tr>
+              <tr><td><div class="svc"><div class="ico" style="background:#1b2838"></div>Steam</div></td><td>johndoe</td><td>Gaming</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td><td>1w ago</td><td>steampowered.com</td></tr>
+              <tr><td><div class="svc"><div class="ico" style="background:#0070ba"></div>PayPal</div></td><td>john.doe@gmail.com</td><td>Finance</td><td><div class="strength"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div></td><td>3d ago</td><td>paypal.com</td></tr>
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="action-bar">
+        <div class="ab-btns">
+          <span>★ Favorite</span><span>⧉ Copy</span><span>⤴ Open URL</span><span>✎ Edit</span><span>🕐 History</span><span class="ab-delete">🗑 Delete</span>
+        </div>
+        <div class="ab-count">4 of 4 entries</div>
       </div>
     </div>
   </section>
 
   <section id="features">
     <div class="section-head">
-      <h2>Byggt för säkerhet. Designat för dig.</h2>
-      <p>Varje funktion i The LockShed är byggd kring en princip: din data lämnar aldrig din enhet.</p>
+      <h2>Built for security. Designed for you.</h2>
+      <p>Every feature in The LockShed is built around one principle: your data never leaves your device.</p>
     </div>
     <div class="feature-grid">
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" stroke="#4f8cff" stroke-width="1.8"/></svg></div>
-        <h3>End-to-end-kryptering</h3>
-        <p>AES-256-CBC kombinerat med HMAC-SHA256 skyddar varje post i valvet, lokalt och utan moln.</p>
+        <h3>End-to-end encryption</h3>
+        <p>AES-256-CBC combined with HMAC-SHA256 protects every entry in the vault, locally and without the cloud.</p>
       </div>
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke="#4f8cff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
-        <h3>Smart lösenordsanalys</h3>
-        <p>Inbyggd zxcvbn-analys visar hur starkt varje lösenord verkligen är — inte bara längd.</p>
+        <h3>Smart password analysis</h3>
+        <p>Built-in zxcvbn analysis shows how strong each password really is — not just its length.</p>
       </div>
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#4f8cff" stroke-width="1.8"/><path d="M3 18h18" stroke="#4f8cff" stroke-width="1.8"/></svg></div>
-        <h3>Alla dina enheter</h3>
-        <p>Browser-tillägg med autofyll (Ctrl+Shift+L) och en PIN-skyddad PWA för mobilen över ditt eget WiFi.</p>
+        <h3>All your devices</h3>
+        <p>A browser extension with autofill (Ctrl+Shift+L) and a PIN-protected PWA for your phone over your own WiFi.</p>
       </div>
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4f8cff" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="#4f8cff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <h3>Auto-lock & historik</h3>
-        <p>Valvet låser sig automatiskt vid inaktivitet och håller koll på tidigare lösenord per post.</p>
+        <h3>Auto-lock & history</h3>
+        <p>The vault locks itself automatically when idle, and keeps track of previous passwords for each entry.</p>
       </div>
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4V4z" stroke="#4f8cff" stroke-width="1.8"/><path d="M4 9h16" stroke="#4f8cff" stroke-width="1.8"/></svg></div>
         <h3>Export & import</h3>
-        <p>PDF-export för dina anteckningar och CSV-import för enkel migrering från andra hanterare.</p>
+        <p>PDF export for your notes and CSV import for easy migration from other managers.</p>
       </div>
       <div class="feature-card">
         <div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#4f8cff" stroke-width="1.8"/></svg></div>
-        <h3>Teman & skalning</h3>
-        <p>Flera visuella teman och global typsnittsskalning — gör gränssnittet till ditt eget.</p>
+        <h3>Themes & scaling</h3>
+        <p>Several visual themes and global font scaling — make the interface your own.</p>
       </div>
     </div>
   </section>
@@ -381,13 +454,13 @@
   <section id="reach">
     <div class="reach">
       <div>
-        <h2>Ett valv. Alla dina ytor.</h2>
-        <p>The LockShed körs som skrivbordsapp på Windows, men sträcker sig vidare: en lokal Flask-server driver ett browser-tillägg för snabb autofyll, och en PIN-skyddad PWA gör att du kommer åt valvet från mobilen — allt över ditt eget lokala nätverk, ingenting i molnet.</p>
+        <h2>One vault. All your surfaces.</h2>
+        <p>The LockShed runs as a desktop app on Windows, but reaches further: a local Flask server powers a browser extension for quick autofill, and a PIN-protected PWA lets you reach the vault from your phone — all over your own local network, nothing in the cloud.</p>
         <div class="reach-tags">
-          <span>Windows-app</span>
-          <span>Brave / Chrome-tillägg</span>
-          <span>Mobil PWA via LAN</span>
-          <span>Systembricka</span>
+          <span>Windows app</span>
+          <span>Brave / Chrome extension</span>
+          <span>Mobile PWA via LAN</span>
+          <span>System tray</span>
         </div>
       </div>
       <div class="device-stack">
@@ -406,13 +479,16 @@
 
   <section id="download">
     <div class="download-band">
-      <h2>Ladda ner The LockShed</h2>
-      <p>Tillgänglig nu för Windows 10/11.</p>
-      <a href="#" class="btn-primary" style="display:inline-flex;">
+      <h2>Download The LockShed</h2>
+      <p>Available now for Windows 10/11.</p>
+      <a href="https://github.com/yalkatrazz/lockshed/releases/latest/download/LockShed-Setup.exe" class="btn-primary" style="display:inline-flex;">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h5.5v5.5H2V2zm6.5 0H14v5.5H8.5V2zM2 8.5h5.5V14H2V8.5zm6.5 0H14V14H8.5V8.5z" fill="white"/></svg>
-        Ladda ner för Windows
+        Download for Windows
       </a>
-      <div class="version-tag">Version 30.0 · Windows 10/11 · 100% lokal</div>
+      <div class="version-tag">Version 1.0.0 · Windows 10/11 · 100% local</div>
+      <div class="donate-line">
+        Enjoying The LockShed? <a href="https://paypal.me/paddesan" target="_blank" rel="noopener">💙 Donate via PayPal</a>
+      </div>
     </div>
   </section>
 </div>
@@ -421,9 +497,10 @@
   <div class="wrap foot-row">
     <span>© 2026 The LockShed</span>
     <div class="foot-links">
-      <a href="#features">Funktioner</a>
-      <a href="#reach">Plattformar</a>
+      <a href="#features">Features</a>
+      <a href="#reach">Platforms</a>
       <a href="#support">Support</a>
+      <a href="https://paypal.me/paddesan" target="_blank" rel="noopener">💙 Donate (PayPal)</a>
     </div>
   </div>
 </footer>
