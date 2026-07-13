@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 280px;
+    font-family: "Segoe UI", sans-serif;
+    background: #0f1b2d;
+    color: #dce8f8;
+  }
+  .header {
+    background: #13203a;
+    padding: 14px 16px;
+    border-bottom: 1px solid #2a4060;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header h1 { font-size: 14px; font-weight: 600; }
+  .header span { font-size: 20px; }
+  .domain-bar {
+    padding: 8px 16px;
+    background: #0a1525;
+    font-size: 11px;
+    color: #6b86a8;
+    border-bottom: 1px solid #1a2d45;
+  }
+  .domain-bar strong { color: #4f8ef7; }
+  .btn {
+    display: flex; align-items: center; gap: 10px;
+    width: calc(100% - 24px); margin: 8px 12px 0;
+    padding: 10px 14px;
+    border-radius: 8px; border: none; cursor: pointer;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px; font-weight: 500;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: #2563eb; color: #fff; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-secondary { background: #1a2d45; color: #dce8f8; border: 1px solid #2a4060; }
+  .btn-secondary:hover { background: #223558; }
+  .status {
+    margin: 10px 12px 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: none;
+  }
+  .status.ok    { background: #14532d; color: #86efac; display: block; }
+  .status.warn  { background: #451a03; color: #fcd34d; display: block; }
+  .status.error { background: #450a0a; color: #fca5a5; display: block; }
+  .entries { margin: 4px 12px 12px; }
+  .entry-btn {
+    display: block; width: 100%; text-align: left;
+    background: #1a2d45; border: 1px solid #2a4060;
+    border-radius: 8px; color: #dce8f8;
+    padding: 9px 12px; margin-bottom: 6px;
+    cursor: pointer; font-size: 12px;
+    font-family: "Segoe UI", sans-serif;
+    transition: background 0.12s;
+  }
+  .entry-btn:hover { background: #223558; }
+  .entry-btn .name { font-weight: 600; font-size: 13px; }
+  .entry-btn .user { color: #6b86a8; font-size: 11px; margin-top: 1px; }
+  .footer {
+    padding: 8px 12px 12px;
+    border-top: 1px solid #1a2d45;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer span { font-size: 11px; color: #4a6080; }
+  #app-status { width: 8px; height: 8px; border-radius: 50%; background: #6b86a8; display: inline-block; margin-right: 4px; }
+  #app-status.online  { background: #22c55e; }
+  #app-status.offline { background: #ef4444; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span>🔐</span>
+  <h1>The LockShed</h1>
+</div>
+
+<div class="domain-bar">
+  Current site: <strong id="domain-label">—</strong>
+</div>
+
+<div id="action-area">
+  <button class="btn btn-primary" id="btn-fill">
+    ⚡ Autofill this page
+  </button>
+  <button class="btn btn-secondary" id="btn-all">
+    📋 Show all entries
+  </button>
+</div>
+
+<div class="status" id="status-box"></div>
+<div class="entries" id="entries-list"></div>
+
+<div class="footer">
+  <span><span id="app-status"></span><span id="app-status-text">Checking…</span></span>
+  <span id="pair-link" style="color:#2563eb; font-size:11px; cursor:pointer;">⚙ Pairing</span>
+</div>
+
+<script>
+function showStatus(msg, type) {
+  const box = document.getElementById("status-box");
+  box.textContent = msg;
+  box.className = "status " + type;
+}
+
+function clearStatus() {
+  document.getElementById("status-box").className = "status";
+  document.getElementById("entries-list").innerHTML = "";
+}
+
+async function checkAppStatus() {
+  const res = await chrome.runtime.sendMessage({ action: "ping" });
+  const dot  = document.getElementById("app-status");
+  const text = document.getElementById("app-status-text");
+  if (res?.ok) {
+    dot.className = "online";
+    text.textContent = res.data.locked ? "App connected (locked)" : "App connected";
+  } else if (res?.error === "not_paired") {
+    dot.className = "offline";
+    text.textContent = "Not paired - click to set up";
+    text.style.cursor = "pointer";
+    text.onclick = () => chrome.runtime.openOptionsPage();
+  } else {
+    dot.className = "offline";
+    text.textContent = "App not running";
+  }
+}
+
+async function getDomain() {
+  return new Promise(resolve => {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      try {
+        const url = new URL(tabs[0].url);
+        resolve(url.hostname);
+      } catch { resolve("unknown"); }
+    });
+  });
+}
+
+async function lookupEntries(domain, showAll) {
+  const res = await chrome.runtime.sendMessage({ action: "lookup", domain, showAll });
+  if (!res?.ok) throw new Error(res?.error || "not ok");
+  return res.data;
+}
+
+function renderEntries(entries, domain) {
+  const list = document.getElementById("entries-list");
+  list.innerHTML = "";
+  if (!entries.length) {
+    showStatus(`No entries found for ${domain}`, "warn"); return;
+  }
+  clearStatus();
+  for (const e of entries) {
+    const btn = document.createElement("button");
+    btn.className = "entry-btn";
+    btn.innerHTML = `<div class="name">${e.name}</div><div class="user">${e.user || "—"}</div>`;
+    btn.addEventListener("click", () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, { action: "fill" });
+        window.close();
+      });
+    });
+    list.appendChild(btn);
+  }
+}
+
+document.getElementById("pair-link").addEventListener("click", () => {
+  chrome.runtime.openOptionsPage();
+});
+
+// Init
+(async () => {
+  const domain = await getDomain();
+  document.getElementById("domain-label").textContent = domain;
+  await checkAppStatus();
+
+  // Auto-lookup on open
+  try {
+    const data = await lookupEntries(domain, false);
+    if (data.entries?.length) renderEntries(data.entries, domain);
+  } catch {}
+})();
+
+document.getElementById("btn-fill").addEventListener("click", async () => {
+  clearStatus();
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "fill", showAll: false }, () => window.close());
+  });
+});
+
+document.getElementById("btn-all").addEventListener("click", async () => {
+  clearStatus();
+  const domain = await getDomain();
+  try {
+    const data = await lookupEntries(domain, true);
+    renderEntries(data.entries || [], domain);
+  } catch {
+    showStatus("The LockShed app is not running.", "error");
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1b2d">
+<title>The LockShed</title>
+<link rel="manifest" href="manifest.json">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg:      #0f1b2d;
+  --card:    #1a2d45;
+  --accent:  #4f8ef7;
+  --danger:  #ef4444;
+  --text:    #dce8f8;
+  --muted:   #6b86a8;
+  --border:  #2a4060;
+  --green:   #22c55e;
+}
+body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; min-height: 100vh; }
+
+/* ── Header ── */
+.header {
+  background: #13203a;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+.header h1 { font-size: 17px; font-weight: 600; flex: 1; }
+.header .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.header .status-dot.on  { background: var(--green); }
+.header .status-dot.off { background: var(--danger); }
+
+/* ── Screens ── */
+.screen { display: none; padding: 16px; }
+.screen.active { display: block; }
+
+/* ── Login ── */
+.login-box { max-width: 360px; margin: 40px auto; text-align: center; }
+.lock-icon { font-size: 56px; margin-bottom: 16px; }
+.login-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.login-box p  { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+/* ── Inputs & Buttons ── */
+input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--card);
+  color: var(--text); font-size: 16px; outline: none;
+  transition: border-color 0.15s;
+}
+input:focus { border-color: var(--accent); }
+input::placeholder { color: var(--muted); }
+
+.btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.15s; margin-top: 10px;
+}
+.btn:active { opacity: 0.8; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-danger  { background: var(--danger);  color: #fff; }
+.btn-ghost   { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+/* ── Search ── */
+.search-wrap { position: sticky; top: 57px; z-index: 99; background: var(--bg); padding-bottom: 10px; }
+.search-input-wrap { position: relative; }
+.search-input-wrap input { padding-left: 40px; }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--muted); }
+
+/* ── Entry list ── */
+.entry-list { display: flex; flex-direction: column; gap: 8px; }
+.entry-card {
+  background: var(--card); border-radius: 12px; padding: 14px 16px;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: background 0.12s;
+  display: flex; align-items: center; gap: 12px;
+}
+.entry-card:active { background: #223558; }
+.entry-initial {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  background: var(--accent); display: flex; align-items: center;
+  justify-content: center; font-size: 16px; font-weight: 700; color: #fff;
+}
+.entry-info { flex: 1; min-width: 0; }
+.entry-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-user { font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-str  { font-size: 11px; color: var(--muted); }
+
+/* ── Password detail ── */
+.detail-box {
+  background: var(--card); border-radius: 14px; padding: 18px;
+  border: 1px solid var(--border); margin-bottom: 12px;
+}
+.detail-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.detail-value { font-size: 15px; word-break: break-all; }
+.detail-pw { font-family: Consolas, monospace; font-size: 16px; letter-spacing: 1px; color: var(--accent); }
+.detail-row { display: flex; gap: 8px; margin-top: 10px; }
+.detail-row .btn { margin: 0; flex: 1; padding: 12px; font-size: 14px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #16a34a; color: #fff; padding: 10px 22px;
+  border-radius: 20px; font-size: 14px; font-weight: 500;
+  z-index: 999; display: none; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ── Misc ── */
+.empty { text-align: center; padding: 48px 16px; color: var(--muted); }
+.empty .big { font-size: 40px; margin-bottom: 10px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge-cat { background: #223558; color: var(--muted); }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: 15px; margin-bottom: 16px; cursor: pointer; font-weight: 500; }
+.str-bar { display: flex; gap: 3px; margin-top: 6px; }
+.str-seg { height: 4px; border-radius: 2px; flex: 1; background: var(--border); }
+.str-seg.fill0 { background: #ef4444; }
+.str-seg.fill1 { background: #f97316; }
+.str-seg.fill2 { background: #eab308; }
+.str-seg.fill3, .str-seg.fill4, .str-seg.fill5 { background: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <span style="font-size:22px;">🔐</span>
+  <h1>The LockShed</h1>
+  <div class="status-dot" id="statusDot"></div>
+</div>
+
+<!-- Login screen -->
+<div class="screen active" id="screenLogin">
+  <div class="login-box">
+    <div class="lock-icon">🔐</div>
+    <h2>Welcome</h2>
+    <p>Enter your mobile PIN to access your vault</p>
+    <div id="serverConfig" style="margin-bottom:20px;">
+      <input type="text" id="serverIp" placeholder="Computer IP  e.g. 192.168.1.5" style="margin-bottom:8px;" />
+      <input type="text" id="serverPort" value="19486" placeholder="Port" />
+    </div>
+    <input type="password" id="pinInput" placeholder="Mobile PIN" inputmode="numeric" maxlength="8" />
+    <div id="loginError" style="color:#ef4444;font-size:13px;margin-top:8px;display:none;"></div>
+    <button class="btn btn-primary" onclick="doLogin()">Unlock</button>
+  </div>
+</div>
+
+<!-- Main screen -->
+<div class="screen" id="screenMain">
+  <div class="search-wrap">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Search entries…" oninput="doSearch()" />
+    </div>
+  </div>
+  <div class="entry-list" id="entryList"></div>
+</div>
+
+<!-- Detail screen -->
+<div class="screen" id="screenDetail">
+  <div class="back-btn" onclick="showMain()">← Back</div>
+  <div id="detailContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_IP   = "pv_server_ip";
+const STORAGE_PORT = "pv_server_port";
+
+let serverBase = "";
+let currentToken = "";
+let allEntries = [];
+
+// ── Restore saved server config ─────────────────────────────────────────────
+window.addEventListener("load", () => {
+  const ip   = localStorage.getItem(STORAGE_IP)   || "";
+  const port = localStorage.getItem(STORAGE_PORT) || "19486";
+  if (ip) document.getElementById("serverIp").value   = ip;
+  document.getElementById("serverPort").value = port;
+  checkStatus();
+});
+
+async function checkStatus() {
+  const ip   = document.getElementById("serverIp").value.trim();
+  const port = document.getElementById("serverPort").value.trim() || "19486";
+  if (!ip) return;
+  try {
+    const res = await fetch(`http://${ip}:${port}/m/ping`, { signal: AbortSignal.timeout(2000) });
+    document.getElementById("statusDot").className = res.ok ? "status-dot on" : "status-dot off";
+  } catch { document.getElementById("statusDot").className = "status-dot off"; }
+}
+
+async function doLogin() {
+  const ip   = document.getElementById("serverIp").value.trim();
+  const port = document.getElementById("serverPort").value.trim() || "19486";
+  const pin  = document.getElementById("pinInput").value.trim();
+  const errEl = document.getElementById("loginError");
+  errEl.style.display = "none";
+
+  if (!ip) { errEl.textContent = "Enter your computer's IP address."; errEl.style.display = "block"; return; }
+  if (!pin) { errEl.textContent = "Enter your PIN."; errEl.style.display = "block"; return; }
+
+  serverBase = `http://${ip}:${port}`;
+
+  try {
+    const res = await fetch(`${serverBase}/m/auth`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin })
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || "Wrong PIN."; errEl.style.display = "block"; return; }
+
+    // The PIN itself is only ever sent this once. Everything after this
+    // uses the short-lived token instead, so a captured request later on
+    // doesn't hand over the permanent PIN.
+    currentToken = data.token;
+
+    localStorage.setItem(STORAGE_IP,   ip);
+    localStorage.setItem(STORAGE_PORT, port);
+    await loadEntries();
+    show("screenMain");
+  } catch(e) {
+    errEl.textContent = "Cannot reach app. Make sure The LockShed is running and you're on the same WiFi.";
+    errEl.style.display = "block";
+  }
+}
+
+// If the session token has expired (or was never set), send the user back
+// to the PIN screen instead of showing a confusing empty list.
+function requireReauth() {
+  currentToken = "";
+  document.getElementById("loginError").style.display = "none";
+  show("screenLogin");
+}
+
+async function loadEntries(q = "") {
+  const url = `${serverBase}/m/entries${q ? "?q=" + encodeURIComponent(q) : ""}`;
+  const res = await fetch(url, { headers: { "X-Mobile-Token": currentToken } });
+  if (res.status === 401) { requireReauth(); return; }
+  const data = await res.json();
+  allEntries = data.entries || [];
+  renderEntries(allEntries);
+}
+
+function doSearch() {
+  const q = document.getElementById("searchInput").value.trim();
+  loadEntries(q);
+}
+
+function renderEntries(entries) {
+  const list = document.getElementById("entryList");
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty"><div class="big">🔍</div>No entries found</div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="entry-card" onclick="showDetail(${e.id})">
+      <div class="entry-initial">${escapeHtml(e.name.slice(0,2).toUpperCase())}</div>
+      <div class="entry-info">
+        <div class="entry-name">${escapeHtml(e.name)}</div>
+        <div class="entry-user">${escapeHtml(e.user) || "—"}</div>
+        <div class="str-bar">${[0,1,2,3,4].map(i =>
+          `<div class="str-seg ${i <= e.strength ? 'fill'+e.strength : ''}"></div>`
+        ).join("")}</div>
+      </div>
+      <span class="badge badge-cat">${escapeHtml(e.category)}</span>
+    </div>
+  `).join("");
+}
+
+async function showDetail(id) {
+  const entry = allEntries.find(e => e.id === id);
+  if (!entry) return;
+
+  // Fetch password separately (minimizes exposure time)
+  const res  = await fetch(`${serverBase}/m/password/${id}`, { headers: { "X-Mobile-Token": currentToken } });
+  if (res.status === 401) { requireReauth(); return; }
+  const data = await res.json();
+  const pw   = data.password || "";
+
+  const strLabels = ["Very weak","Weak","Fair","Good","Strong","Very strong"];
+  const content = document.getElementById("detailContent");
+
+  // IMPORTANT: never inject the raw password/username into an HTML
+  // attribute string (e.g. onclick="copyText('...')"). Passwords can
+  // contain quotes, backslashes, or other characters that break out of
+  // the attribute and corrupt what actually gets copied - which is
+  // exactly the "random characters copied instead of the password" bug.
+  // Storing them in module-level variables and wiring click handlers
+  // with addEventListener afterwards avoids this entirely.
+  currentDetailPassword = pw;
+  currentDetailUsername = entry.user || "";
+
+  content.innerHTML = `
+    <div class="detail-box">
+      <div class="detail-label">Service</div>
+      <div class="detail-value" style="font-size:18px;font-weight:700;">${escapeHtml(entry.name)}</div>
+      ${entry.category ? `<span class="badge badge-cat" style="margin-top:6px;display:inline-block;">${escapeHtml(entry.category)}</span>` : ""}
+    </div>
+    ${entry.user ? `
+    <div class="detail-box">
+      <div class="detail-label">Username / Email</div>
+      <div class="detail-value">${escapeHtml(entry.user)}</div>
+      <div class="detail-row">
+        <button class="btn btn-ghost" id="btnCopyUser">Copy username</button>
+      </div>
+    </div>` : ""}
+    <div class="detail-box">
+      <div class="detail-label">Password</div>
+      <div class="detail-pw" id="pwDisplay">••••••••••••</div>
+      <div class="str-bar" style="margin-top:8px;">${[0,1,2,3,4].map(i =>
+        `<div class="str-seg ${i <= entry.strength ? 'fill'+entry.strength : ''}"></div>`
+      ).join("")}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">${strLabels[entry.strength]}</div>
+      <div class="detail-row">
+        <button class="btn btn-ghost"   id="btnTogglePw">Show</button>
+        <button class="btn btn-primary" id="btnCopyPw">Copy password</button>
+      </div>
+    </div>
+    ${entry.url ? `
+    <div class="detail-box">
+      <div class="detail-label">URL</div>
+      <div class="detail-value"><a href="${entry.url.startsWith('http') ? entry.url : 'https://'+entry.url}" style="color:var(--accent);">${entry.url}</a></div>
+    </div>` : ""}
+  `;
+  show("screenDetail");
+
+  // Wire up button clicks via addEventListener instead of inline onclick
+  // attributes - this is what avoids the password-corruption bug, since
+  // the actual password value never has to survive a round-trip through
+  // an HTML attribute string.
+  const btnCopyUser = document.getElementById("btnCopyUser");
+  if (btnCopyUser) btnCopyUser.addEventListener("click", () => copyText(currentDetailUsername));
+
+  document.getElementById("btnTogglePw").addEventListener("click", () => togglePw(currentDetailPassword));
+  document.getElementById("btnCopyPw").addEventListener("click", () => copyText(currentDetailPassword));
+}
+
+let pwShown = false;
+let currentDetailPassword = "";
+let currentDetailUsername = "";
+
+function escapeHtml(str) {
+  // Only used for fields that are *displayed* as text (service name,
+  // category, username, URL) - never for the password itself, which
+  // is handled exclusively through addEventListener + closure variables.
+  const div = document.createElement("div");
+  div.textContent = str ?? "";
+  return div.innerHTML;
+}
+
+function togglePw(pw) {
+  pwShown = !pwShown;
+  const el = document.getElementById("pwDisplay");
+  if (el) el.textContent = pwShown ? pw : "••••••••••••";
+}
+
+function copyText(text) {
+  // navigator.clipboard.writeText() silently fails on many Android
+  // browsers when the page is served over plain HTTP on a LAN address
+  // (not https:// and not localhost) - the Clipboard API requires a
+  // "secure context", and 192.168.x.x over http:// doesn't count even
+  // though it's on a trusted local network. The old execCommand("copy")
+  // fallback is also deprecated and unreliable on modern Chrome/Brave.
+  // So: try the modern API first, but if it's unavailable or fails,
+  // show the password in a selected, tap-to-copy-friendly text field
+  // instead of silently doing nothing.
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast("Copied!"))
+      .catch(() => showManualCopy(text));
+  } else {
+    showManualCopy(text);
+  }
+}
+
+function showManualCopy(text) {
+  document.getElementById("pv-manual-copy")?.remove();
+  const box = document.createElement("div");
+  box.id = "pv-manual-copy";
+  box.style.cssText = `
+    position:fixed; inset:0; background:rgba(0,0,0,0.6);
+    z-index:9999; display:flex; align-items:center; justify-content:center;
+    padding:20px;
+  `;
+  box.innerHTML = `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; max-width:340px; width:100%;">
+      <div style="font-size:13px; color:var(--muted); margin-bottom:10px;">
+        Automatic copy isn't available here. Tap the text below, then use your keyboard's copy option:
+      </div>
+      <input id="pv-manual-input" readonly value="${text.replace(/"/g,'&quot;')}"
+        style="font-family:Consolas,monospace; font-size:15px; margin-bottom:12px;" />
+      <button class="btn btn-primary" id="pv-manual-close">Done</button>
+    </div>
+  `;
+  document.body.appendChild(box);
+
+  const input = document.getElementById("pv-manual-input");
+  input.focus();
+  input.select();
+  input.setSelectionRange(0, text.length);  // ensures full selection on Android too
+
+  document.getElementById("pv-manual-close").addEventListener("click", () => box.remove());
+}
+
+function showMain() {
+  pwShown = false;
+  show("screenMain");
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 1800);
+}
+
+// Allow Enter key on PIN input
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("pinInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") doLogin();
+  });
+  // Ping every 30s to keep status updated
+  setInterval(checkStatus, 30000);
+});
+</script>
+</body>
+</html>

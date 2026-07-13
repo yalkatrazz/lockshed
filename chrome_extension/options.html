@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The LockShed - Pairing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 420px;
+    font-family: "Segoe UI", sans-serif;
+    background: #0f1b2d;
+    color: #dce8f8;
+    padding: 20px;
+  }
+  h1 { font-size: 16px; margin-bottom: 4px; }
+  p { font-size: 12px; color: #6b86a8; line-height: 1.5; margin-bottom: 14px; }
+  input {
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1.5px solid #2a4060; background: #16213e; color: #dce8f8;
+    font-size: 13px; font-family: Consolas, monospace; outline: none;
+  }
+  input:focus { border-color: #4f8ef7; }
+  .btn {
+    margin-top: 10px; width: 100%; padding: 10px; border-radius: 8px;
+    border: none; cursor: pointer; font-size: 13px; font-weight: 500;
+    background: #2563eb; color: #fff;
+  }
+  .btn:hover { background: #1d4ed8; }
+  .status {
+    margin-top: 12px; padding: 8px 12px; border-radius: 6px;
+    font-size: 12px; display: none;
+  }
+  .status.ok    { background: #14532d; color: #86efac; display: block; }
+  .status.error { background: #450a0a; color: #fca5a5; display: block; }
+</style>
+</head>
+<body>
+
+<h1>🔐 Pair with The LockShed</h1>
+<p>
+  Open the desktop app → <strong>Settings → 🧩 Extension</strong>, copy the
+  pairing code shown there, and paste it below. This code is unique to your
+  installation and lets this extension (and only this extension) talk to
+  your local vault.
+</p>
+
+<input type="text" id="secret-input" placeholder="Paste pairing code…" autocomplete="off" spellcheck="false">
+<button class="btn" id="save-btn">Save pairing code</button>
+<div class="status" id="status-box"></div>
+
+<script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "The LockShed Autofill",
+  "version": "1.2",
+  "description": "Autofill passwords from your local LockShed app",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:19485/*",
+    "http://127.0.0.1:19485/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png"
+    }
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png"
+  }
+}

@@ -1,0 +1,10 @@
+# Build output - regenerate with build.bat, don't commit
+/dist/
+/dist_installer/
+/build/work/
+__pycache__/
+*.pyc
+
+# User-specific data (never relevant to the repo)
+*.enc
+*.lockshed_settings.json
