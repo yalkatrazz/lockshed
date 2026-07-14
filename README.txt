@@ -14,7 +14,7 @@ OPTION A - You have "LockShed-Setup.exe"
   1. Run it and follow the installer
   2. If Windows SmartScreen warns "unknown publisher", click
      "More info" -> "Run anyway" (just means it isn't
-     code-signed - see section 10)
+     code-signed - nothing to worry about)
   3. Launch The LockShed from the Start Menu
   4. Choose a strong master password when prompted
 
@@ -162,39 +162,6 @@ EXTENSION SAYS "NOT PAIRED" OR "APP NOT RUNNING"
 MOBILE NOT REACHABLE AFTER SETTING A PIN
   Restart the app once - the phone server only starts on the
   first launch after a PIN is configured.
-
-
-----------------------------------------
-10. BUILDING A WINDOWS INSTALLER (for developers)
-----------------------------------------
-
-Regular users can skip this - installera.bat + starta.bat is
-all you need day to day.
-
-BEFORE EVERY RELEASE, bump the version in 3 places:
-  - APP_VERSION in password_manager.py
-  - MyAppVersion in build\installer.iss
-  - The version tag in index.html's download section
-
-ONE-TIME SETUP
-  1. Install Python 3.10+ (check "Add to PATH")
-  2. Install Inno Setup: https://jrsoftware.org/isinfo.php
-
-BUILDING
-  1. Double-click build.bat
-  2. It runs PyInstaller (-> dist\LockShed\LockShed.exe), then
-     Inno Setup (-> dist_installer\LockShed-Setup.exe)
-  3. If ISCC.exe isn't on PATH, it prints instructions instead
-     of failing - add it to PATH, or run installer.iss manually
-     in the Inno Setup app
-
-The browser extension is never auto-installed into Brave/Chrome
-(browsers block that) - point users to section 6 for pairing.
-
-Setup.exe is unsigned - Windows SmartScreen will warn on first
-run ("More info" -> "Run anyway"). A code-signing cert removes
-this but isn't required. Uninstalling never touches your vault
-or settings files - they live outside the install directory.
 
 
 ========================================

@@ -51,7 +51,7 @@ Most password managers ask you to trust a company's cloud servers with the one f
 
 Full setup instructions (mobile access, browser extension pairing, backups, troubleshooting) are in [`README.txt`](README.txt), also bundled inside the installed app.
 
-## Building from source
+## Running from source
 
 ```
 git clone https://github.com/yalkatrazz/lockshed.git
@@ -59,8 +59,6 @@ cd lockshed
 installera.bat   # installs Python dependencies
 starta.bat       # runs the app
 ```
-
-Want to build your own `Setup.exe`? See the **"Building a Windows Installer"** section in [`README.txt`](README.txt) - `build.bat` handles PyInstaller + Inno Setup end to end.
 
 ## Security
 
