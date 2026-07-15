@@ -250,6 +250,7 @@
   .reach::after{
     content:''; position:absolute; right:-10%; top:-30%; width:60%; height:160%;
     background:radial-gradient(circle, rgba(61,220,132,0.08), transparent 65%);
+    pointer-events:none;
   }
   .reach h2{font-size:30px; font-weight:800; letter-spacing:-0.02em; margin-bottom:16px;}
   .reach p{color:var(--text-1); font-size:15.5px; line-height:1.7; margin-bottom:14px;}
@@ -281,13 +282,15 @@
     padding:64px; text-align:center; position:relative; overflow:hidden;
   }
   .download-band::before{
-    content:''; position:absolute; inset:0;
+    content:''; position:absolute; inset:0; z-index:0;
     background:radial-gradient(circle at 50% 0%, rgba(79,140,255,0.18), transparent 55%);
+    pointer-events:none;
   }
-  .download-band h2{font-size:32px; font-weight:800; letter-spacing:-0.02em; margin-bottom:12px; position:relative;}
-  .download-band p{color:var(--text-1); margin-bottom:30px; position:relative;}
+  .download-band > *{position:relative; z-index:1;}
+  .download-band h2{font-size:32px; font-weight:800; letter-spacing:-0.02em; margin-bottom:12px;}
+  .download-band p{color:var(--text-1); margin-bottom:30px;}
   .version-tag{
-    font-family:var(--font-mono); font-size:12.5px; color:var(--text-2); margin-top:20px; position:relative;
+    font-family:var(--font-mono); font-size:12.5px; color:var(--text-2); margin-top:20px;
   }
 
   footer{
@@ -331,17 +334,17 @@
       <a href="https://paypal.me/paddesan" target="_blank" rel="noopener" class="btn-donate">
         <span class="cup">💙</span> Donate via PayPal
       </a>
-      <a href="https://github.com/yalkatrazz/lockshed/releases/latest/download/LockShed-Setup.exe" class="nav-cta">Download</a>
+      <a href="https://github.com/yalkatrazz/lockshed/releases/latest" class="nav-cta" target="_blank" rel="noopener">Download</a>
     </div>
   </nav>
 
   <section class="hero">
     <div>
-      <div class="eyebrow"><span class="dot"></span> v1.0.0 · 100% local storage</div>
+      <div class="eyebrow"><span class="dot"></span> v1.1.0 · 100% local storage</div>
       <h1>Your passwords.<br><span class="accent">Securely</span> locked away.</h1>
       <p class="lead">The LockShed encrypts your passwords, notes, and sensitive information locally on your computer — with AES-256-CBC and HMAC-SHA256. Nothing leaves your machine unless you want it to.</p>
       <div class="cta-row">
-        <a href="https://github.com/yalkatrazz/lockshed/releases/latest/download/LockShed-Setup.exe" class="btn-primary">
+        <a href="https://github.com/yalkatrazz/lockshed/releases/latest" class="btn-primary" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h5.5v5.5H2V2zm6.5 0H14v5.5H8.5V2zM2 8.5h5.5V14H2V8.5zm6.5 0H14V14H8.5V8.5z" fill="white"/></svg>
           Download for Windows
         </a>
@@ -369,7 +372,7 @@
             </div>
             <div class="sb-title">The LockShed</div>
             <div class="sb-sub">Your private vault</div>
-            <div class="sb-version">v1.0.0</div>
+            <div class="sb-version">v1.1.0</div>
             <div class="sb-ext"><span class="dot-live"></span>Extension ready</div>
           </div>
           <div class="sb-nav">
@@ -480,12 +483,12 @@
   <section id="download">
     <div class="download-band">
       <h2>Download The LockShed</h2>
-      <p>Available now for Windows 10/11.</p>
-      <a href="https://github.com/yalkatrazz/lockshed/releases/latest/download/LockShed-Setup.exe" class="btn-primary" style="display:inline-flex;">
+      <p>Available now for Windows 10/11 — installer or portable, your choice.</p>
+      <a href="https://github.com/yalkatrazz/lockshed/releases/latest" class="btn-primary" style="display:inline-flex;" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h5.5v5.5H2V2zm6.5 0H14v5.5H8.5V2zM2 8.5h5.5V14H2V8.5zm6.5 0H14V14H8.5V8.5z" fill="white"/></svg>
         Download for Windows
       </a>
-      <div class="version-tag">Version 1.0.0 · Windows 10/11 · 100% local</div>
+      <div class="version-tag">Opens the GitHub release page · Version 1.1.0 · 100% local</div>
       <div class="donate-line">
         Enjoying The LockShed? <a href="https://paypal.me/paddesan" target="_blank" rel="noopener">💙 Donate via PayPal</a>
       </div>

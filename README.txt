@@ -25,13 +25,30 @@ OPTION B - Running from source
   4. Choose a strong master password when prompted
   If something won't start, run debug.bat to see the error.
 
+OPTION C - You have "LockShed-Portable" (a folder or .zip)
+  1. Unzip it anywhere you like - a USB stick, a folder, wherever
+  2. Double-click LockShed.exe inside it - no install step
+  3. Choose a strong master password when prompted
+  As long as that folder contains a subfolder literally named
+  "data", your vault and settings are saved INSIDE that data
+  folder, right next to the exe - not in your Windows user
+  profile. Take the whole folder with you to another PC and
+  your vault comes with it. A small "💾 Portable mode" badge
+  appears under the version number in the app when this is
+  active, so you can always tell which mode you're in.
+
 
 ----------------------------------------
 2. WHERE YOUR DATA LIVES
 ----------------------------------------
 
+NORMAL (Setup.exe or source) installs:
   Vault (encrypted):        C:\Users\<You>\.lockshed.enc
   Settings (no passwords):  C:\Users\<You>\.lockshed_settings.json
+
+PORTABLE installs:
+  Vault (encrypted):        <LockShed folder>\data\lockshed.enc
+  Settings (no passwords):  <LockShed folder>\data\lockshed_settings.json
 
 The vault file can't be read without your master password -
 not even by you, directly. The settings file is safe to view
@@ -69,6 +86,9 @@ MOVING TO A NEW COMPUTER
   4. Unlock with your existing master password
   Use "Open existing...", not "New..." - "New..." creates an
   empty vault.
+  (Using the Portable version instead? Just copy the whole
+  LockShed folder - your data folder goes with it, nothing
+  else to do.)
 
 MANUAL BACKUP
   Copy .lockshed.enc to a USB drive or external disk whenever

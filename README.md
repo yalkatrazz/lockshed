@@ -42,12 +42,19 @@ Most password managers ask you to trust a company's cloud servers with the one f
 - ⏱ **Auto-lock & password history** - the vault locks itself when idle and remembers previous passwords per entry
 - 📄 **PDF export & CSV import** for backups and migrating from other managers
 - 🎨 **Multiple themes**, drag-and-drop custom categories, adjustable font scaling
+- 💾 **Portable mode** - run it off a USB stick with zero installation, your vault travels with the folder
 
 ## Installation
 
+**Installer (recommended for most people):**
 1. Download `LockShed-Setup.exe` from the [latest release](https://github.com/yalkatrazz/lockshed/releases/latest)
 2. Run it. Windows SmartScreen will show an "unknown publisher" warning the first time - this is expected (the installer isn't code-signed, a paid certificate isn't in the budget for a hobby project); click **More info → Run anyway**
 3. Launch The LockShed from the Start Menu and set a master password
+
+**Portable (no install, runs from a folder or USB stick):**
+1. Download `LockShed-Portable.zip` from the [latest release](https://github.com/yalkatrazz/lockshed/releases/latest) and unzip it anywhere
+2. Run `LockShed.exe` inside it directly
+3. Your vault is saved inside that folder's `data\` subfolder, not your Windows profile - copy the whole folder anywhere and your data comes with it
 
 Full setup instructions (mobile access, browser extension pairing, backups, troubleshooting) are in [`README.txt`](README.txt), also bundled inside the installed app.
 

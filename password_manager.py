@@ -45,7 +45,7 @@ APP_TITLE   = "The LockShed"
 # build/installer.iss and the version shown on the landing page
 # (index.html) - all three should always match. See README.txt
 # section 10 for the release checklist.
-APP_VERSION = "v1.0.0"
+APP_VERSION = "v1.1.0"
 
 # When bundled by PyInstaller (frozen), __file__ points into a temp/extracted
 # location rather than next to the actual .exe, so data folders like
@@ -56,8 +56,15 @@ APP_VERSION = "v1.0.0"
 import sys
 if getattr(sys, "frozen", False):
     BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
+    # Distinct from BASE_DIR: this is always the folder the actual .exe
+    # sits in (e.g. dist\LockShed\), even in onedir mode where _MEIPASS
+    # points at the _internal\ subfolder instead. Used below to check for
+    # portable mode - BASE_DIR is for read-only bundled resources,
+    # EXE_DIR is for "what folder did the user put/carry the app in".
+    EXE_DIR = os.path.dirname(sys.executable)
 else:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    EXE_DIR = BASE_DIR
 
 ICON_PATH   = os.path.join(BASE_DIR, "assets", "lock_icon.png")
 try:
@@ -67,8 +74,24 @@ try:
 except Exception:
     HAS_HEADER_ICON = False
 
-SETTINGS_FILE     = os.path.join(os.path.expanduser("~"), ".lockshed_settings.json")
-DEFAULT_DATA_FILE = os.path.join(os.path.expanduser("~"), ".lockshed.enc")
+# Portable mode: if a "data" folder already exists right next to LockShed.exe,
+# store the vault and settings there instead of the normal Windows user
+# profile location. This is what makes a USB-stick / no-install copy
+# actually portable - the same LockShed.exe works either way, switched
+# purely by whether that folder is present. It's opt-in (you create the
+# folder yourself) rather than automatic, because an admin-installed copy
+# in C:\Program Files\LockShed\ usually isn't writable by a normal user
+# session, so auto-detecting "is this folder writable" would behave
+# inconsistently depending on how the app happened to be launched.
+_portable_data_dir = os.path.join(EXE_DIR, "data")
+if os.path.isdir(_portable_data_dir):
+    SETTINGS_FILE     = os.path.join(_portable_data_dir, "lockshed_settings.json")
+    DEFAULT_DATA_FILE = os.path.join(_portable_data_dir, "lockshed.enc")
+    IS_PORTABLE = True
+else:
+    SETTINGS_FILE     = os.path.join(os.path.expanduser("~"), ".lockshed_settings.json")
+    DEFAULT_DATA_FILE = os.path.join(os.path.expanduser("~"), ".lockshed.enc")
+    IS_PORTABLE = False
 
 # One-time migration from the app's old name ("Lösenordsvalvet") so nobody's
 # existing vault silently "disappears" just because the default file names
@@ -91,7 +114,14 @@ def _migrate_legacy_paths():
         except Exception as e:
             print(f"[LockShed] Could not migrate vault file: {e}")
 
-_migrate_legacy_paths()
+if not IS_PORTABLE:
+    # Never do this in portable mode - it exists to rescue a normal
+    # installed user's data, but in portable mode it could accidentally
+    # copy whoever BUILT the portable folder's own real vault (from their
+    # ~/.losenordsvalvet.enc) into the data/ folder that then gets zipped
+    # up and handed to other people. Portable copies start empty on
+    # purpose; if you want your data on the stick, copy it there yourself.
+    _migrate_legacy_paths()
 
 CATEGORIES  = ["Other","Email","Social","Work","Finance","Gaming","Torrent","TV & Film","Anime"]
 
@@ -719,6 +749,9 @@ class App(ctk.CTk):
                      text_color=T["sidebar_sub"]).pack(pady=(0,2))
         ctk.CTkLabel(header, text=APP_VERSION, font=("Segoe UI",fnt(8)),
                      text_color=T["sidebar_sub"]).pack(pady=(0,4))
+        if IS_PORTABLE:
+            ctk.CTkLabel(header, text="💾 Portable mode", font=("Segoe UI",fnt(8),"bold"),
+                         text_color="#4f8cff").pack(pady=(0,4))
         api_color = "#22c55e" if HAS_FLASK else "#6b86a8"
         api_text  = "● Extension ready" if HAS_FLASK else "● Install flask for extension"
         ctk.CTkLabel(header, text=api_text, font=("Segoe UI",fnt(8)),

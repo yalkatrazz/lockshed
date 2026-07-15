@@ -5,6 +5,12 @@
 __pycache__/
 *.pyc
 
+# Internal build tooling (PyInstaller spec, Inno Setup script, build.bat) -
+# kept local only, not part of the public repo. Regenerate/recreate these
+# from your own backup if you ever need them again on a fresh clone.
+/build/
+/build.bat
+
 # User-specific data (never relevant to the repo)
 *.enc
 *.lockshed_settings.json
